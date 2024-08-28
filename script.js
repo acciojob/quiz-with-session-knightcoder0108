@@ -6,48 +6,42 @@ const scoreElement = document.getElementById("score");
 // Function to save progress in session storage
 function saveProgress() {
   const userAnswers = [];
-  for (let i = 0; i < questions.length; i++) {
-    const selectedOption = document.querySelector(
-      `input[name="question-${i}"]:checked`
-    );
-    if (selectedOption) {
-      userAnswers.push(selectedOption.value);
-    } else {
-      userAnswers.push(null);
-    }
-  }
+  questions.forEach((_, i) => {
+    const selectedOption = document.querySelector(`input[name="question-${i}"]:checked`);
+    userAnswers.push(selectedOption ? selectedOption.value : null);
+  });
   sessionStorage.setItem("progress", JSON.stringify(userAnswers));
 }
 
 // Function to load progress from session storage
 function loadProgress() {
   const storedAnswers = JSON.parse(sessionStorage.getItem("progress"));
-  return storedAnswers || [];
+  return storedAnswers || Array(questions.length).fill(null);
 }
 
 // Function to calculate and display the score
 function calculateScore() {
   const userAnswers = loadProgress();
   let score = 0;
-  for (let i = 0; i < questions.length; i++) {
-    if (userAnswers[i] === questions[i].answer) {
+  questions.forEach((question, i) => {
+    if (userAnswers[i] === question.answer) {
       score++;
     }
-  }
+  });
   return score;
 }
 
 // Function to render the quiz questions and choices
 function renderQuestions() {
   const userAnswers = loadProgress();
-  for (let i = 0; i < questions.length; i++) {
-    const question = questions[i];
+  questions.forEach((question, i) => {
     const questionElement = document.createElement("div");
-    const questionText = document.createTextNode(question.question);
+    const questionText = document.createElement("p");
+    questionText.innerText = question.question;
     questionElement.appendChild(questionText);
 
-    for (let j = 0; j < question.choices.length; j++) {
-      const choice = question.choices[j];
+    question.choices.forEach((choice) => {
+      const choiceLabel = document.createElement("label");
       const choiceElement = document.createElement("input");
       choiceElement.setAttribute("type", "radio");
       choiceElement.setAttribute("name", `question-${i}`);
@@ -57,13 +51,13 @@ function renderQuestions() {
         choiceElement.setAttribute("checked", true);
       }
 
-      const choiceText = document.createTextNode(choice);
-      questionElement.appendChild(choiceElement);
-      questionElement.appendChild(choiceText);
-    }
+      choiceLabel.appendChild(choiceElement);
+      choiceLabel.appendChild(document.createTextNode(choice));
+      questionElement.appendChild(choiceLabel);
+    });
 
     questionsElement.appendChild(questionElement);
-  }
+  });
 }
 
 // Event listener for saving progress on option selection
@@ -73,14 +67,14 @@ questionsElement.addEventListener("change", saveProgress);
 submitButton.addEventListener("click", function () {
   const score = calculateScore();
   localStorage.setItem("score", score);
-  scoreElement.innerText = `Your score is ${score} out of 5.`;
+  scoreElement.innerText = `Your score is ${score} out of ${questions.length}.`;
 });
 
 // Render the quiz questions
 renderQuestions();
 
-// Check if a score is already stored in local storage
+// Display the score if it exists in local storage
 const storedScore = localStorage.getItem("score");
 if (storedScore !== null) {
-  scoreElement.innerText = `Your score is ${storedScore} out of 5.`;
+  scoreElement.innerText = `Your score is ${storedScore} out of ${questions.length}.`;
 }
