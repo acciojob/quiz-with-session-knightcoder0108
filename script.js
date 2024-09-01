@@ -1,9 +1,16 @@
-// Initialize DOM elements
+const questions = [
+  {
+    question: "What is the capital of France?",
+    choices: ["Paris", "London", "Rome", "Madrid"],
+    answer: "Paris"
+  },
+  // Add more questions in similar format
+];
+
 const questionsElement = document.getElementById("questions");
 const submitButton = document.getElementById("submit");
 const scoreElement = document.getElementById("score");
 
-// Function to save progress in session storage
 function saveProgress() {
   const userAnswers = [];
   questions.forEach((_, i) => {
@@ -13,13 +20,11 @@ function saveProgress() {
   sessionStorage.setItem("progress", JSON.stringify(userAnswers));
 }
 
-// Function to load progress from session storage
 function loadProgress() {
   const storedAnswers = JSON.parse(sessionStorage.getItem("progress"));
   return storedAnswers || Array(questions.length).fill(null);
 }
 
-// Function to calculate and display the score
 function calculateScore() {
   const userAnswers = loadProgress();
   let score = 0;
@@ -31,7 +36,6 @@ function calculateScore() {
   return score;
 }
 
-// Function to render the quiz questions and choices
 function renderQuestions() {
   const userAnswers = loadProgress();
   questions.forEach((question, i) => {
@@ -60,20 +64,16 @@ function renderQuestions() {
   });
 }
 
-// Event listener for saving progress on option selection
 questionsElement.addEventListener("change", saveProgress);
 
-// Event listener for submitting the quiz
 submitButton.addEventListener("click", function () {
   const score = calculateScore();
   localStorage.setItem("score", score);
   scoreElement.innerText = `Your score is ${score} out of ${questions.length}.`;
 });
 
-// Render the quiz questions
 renderQuestions();
 
-// Display the score if it exists in local storage
 const storedScore = localStorage.getItem("score");
 if (storedScore !== null) {
   scoreElement.innerText = `Your score is ${storedScore} out of ${questions.length}.`;
