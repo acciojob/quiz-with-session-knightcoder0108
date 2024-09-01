@@ -4,7 +4,26 @@ const questions = [
     choices: ["Paris", "London", "Rome", "Madrid"],
     answer: "Paris"
   },
-  // Add more questions in similar format
+  {
+    question: "What is the capital of England?",
+    choices: ["Paris", "London", "Rome", "Madrid"],
+    answer: "London"
+  },
+  {
+    question: "What is the capital of Italy?",
+    choices: ["Paris", "London", "Rome", "Madrid"],
+    answer: "Rome"
+  },
+  {
+    question: "What is the capital of Spain?",
+    choices: ["Paris", "London", "Rome", "Madrid"],
+    answer: "Madrid"
+  },
+  {
+    question: "What is the capital of Germany?",
+    choices: ["Paris", "Berlin", "Rome", "Madrid"],
+    answer: "Berlin"
+  }
 ];
 
 const questionsElement = document.getElementById("questions");
